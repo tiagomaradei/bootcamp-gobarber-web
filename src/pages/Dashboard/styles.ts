@@ -31,6 +31,41 @@ export const HeaderContent = styled.div`
   }
 `;
 
+export const Notification = styled.div`
+  margin-left: 100px;
+  position: relative;
+
+  div {
+    background: #312e38;
+    color: #fff;
+    position: absolute;
+    top: 30px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 200px;
+    padding: 20px;
+    border: 1px solid #8b9898;
+    border-radius: 5px;
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 15px;
+      border-bottom: 1px solid #3e3b47;
+    }
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+`;
+
 export const Profile = styled.div`
   display: flex;
   align-items: center;

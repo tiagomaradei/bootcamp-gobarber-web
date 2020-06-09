@@ -1,14 +1,16 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import socketIO from 'socket.io-client';
 import { Link } from 'react-router-dom';
 import { isToday, isAfter, format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { FiPower, FiClock } from 'react-icons/fi';
+import { FiPower, FiClock, FiBell } from 'react-icons/fi';
 import {
   Container,
   Header,
   HeaderContent,
+  Notification,
   Profile,
   Content,
   Schedule,
@@ -36,11 +38,17 @@ interface Appointment {
   };
 }
 
+interface Notification {
+  id: string;
+  content: string;
+}
+
 const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [monthAvailability, setMonthAvailability] = useState<
     MonthAvailabilityItem[]
   >([]);
@@ -54,6 +62,20 @@ const Dashboard: React.FC = () => {
   const handleMonthChange = useCallback((month: Date) => {
     setCurrentMonth(month);
   }, []);
+
+  const socketConnection = useMemo(() => {
+    return socketIO('http://localhost:5555', {
+      query: {
+        provider_id: user.id,
+      },
+    });
+  }, [user.id]);
+
+  useEffect(() => {
+    socketConnection.on('notification', (notification: Notification) => {
+      setNotifications([notification, ...notifications]);
+    });
+  }, [socketConnection, notifications]);
 
   useEffect(() => {
     api
@@ -145,6 +167,14 @@ const Dashboard: React.FC = () => {
               </Link>
             </div>
           </Profile>
+          <Notification>
+            <FiBell />
+            <div>
+              {notifications.map((notification) => (
+                <p key={notification.id}>{notification.content}</p>
+              ))}
+            </div>
+          </Notification>
           <button type="button" onClick={signOut}>
             <FiPower />
           </button>
