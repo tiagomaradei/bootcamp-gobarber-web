@@ -1,6 +1,6 @@
-import { renderHook, act } from "@testing-library/react-hooks";
-import { useAuth, AuthProvider } from "../../hooks/auth";
+import { renderHook, act } from '@testing-library/react-hooks';
 import MockAdapter from 'axios-mock-adapter';
+import { useAuth, AuthProvider } from '../../hooks/auth';
 import api from '../../services/api';
 
 const apiMock = new MockAdapter(api);
@@ -14,7 +14,7 @@ describe('Auth hook', () => {
         email: 'tiago.maradei@gmail.com',
       },
       token: 'token-123',
-    }
+    };
 
     apiMock.onPost('sessions').reply(200, apiResponse);
 
@@ -33,28 +33,28 @@ describe('Auth hook', () => {
 
     expect(setItemSpy).toHaveBeenCalledWith(
       '@GoBarber:token',
-      apiResponse.token
+      apiResponse.token,
     );
 
     expect(setItemSpy).toHaveBeenCalledWith(
       '@GoBarber:user',
-      JSON.stringify(apiResponse.user)
+      JSON.stringify(apiResponse.user),
     );
 
     expect(result.current.user.email).toEqual('tiago.maradei@gmail.com');
   });
 
   it('should restore saved data from storage when auth inits', () => {
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
-      switch(key) {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+      switch (key) {
         case '@GoBarber:token':
           return 'token-123';
         case '@GoBarber:user':
           return JSON.stringify({
-              id: 'user123',
-              name: 'Tiago Maradei',
-              email: 'tiago.maradei@gmail.com',
-            });
+            id: 'user123',
+            name: 'Tiago Maradei',
+            email: 'tiago.maradei@gmail.com',
+          });
         default:
           return null;
       }
@@ -68,8 +68,8 @@ describe('Auth hook', () => {
   });
 
   it('should be able to sign out', async () => {
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(key => {
-      switch(key) {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+      switch (key) {
         case '@GoBarber:token':
           return 'token-123';
         case '@GoBarber:user':
@@ -85,7 +85,7 @@ describe('Auth hook', () => {
 
     const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
 
-    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
 

@@ -12,7 +12,7 @@ jest.mock('react-router-dom', () => {
       push: mockedHistoryPush,
     }),
     Link: ({ children }: { children: React.ReactNode }) => children,
-  }
+  };
 });
 
 jest.mock('../../hooks/auth', () => {
@@ -20,7 +20,7 @@ jest.mock('../../hooks/auth', () => {
     useAuth: () => ({
       signIn: mockedSignIn,
     }),
-  }
+  };
 });
 
 jest.mock('../../hooks/toast', () => {
@@ -28,13 +28,13 @@ jest.mock('../../hooks/toast', () => {
     useToast: () => ({
       addToast: mockedAddToast,
     }),
-  }
+  };
 });
 
 describe('SignIn Page', () => {
   beforeEach(() => {
     mockedHistoryPush.mockClear();
-  })
+  });
 
   it('should be able to sign in', async () => {
     const { getByPlaceholderText, getByText } = render(<SignIn />);
@@ -42,7 +42,9 @@ describe('SignIn Page', () => {
     const passwordField = getByPlaceholderText('Senha');
     const buttonElement = getByText('Entrar');
 
-    fireEvent.change(emailField, { target: { value: 'tiago.maradei@gmail.com' } });
+    fireEvent.change(emailField, {
+      target: { value: 'tiago.maradei@gmail.com' },
+    });
     fireEvent.change(passwordField, { target: { value: '123456' } });
     fireEvent.click(buttonElement);
 
@@ -76,14 +78,19 @@ describe('SignIn Page', () => {
     const passwordField = getByPlaceholderText('Senha');
     const buttonElement = getByText('Entrar');
 
-    fireEvent.change(emailField, { target: { value: 'tiago.maradei@gmail.com' } });
+    fireEvent.change(emailField, {
+      target: { value: 'tiago.maradei@gmail.com' },
+    });
+
     fireEvent.change(passwordField, { target: { value: '123456' } });
     fireEvent.click(buttonElement);
 
     await wait(() => {
-      expect(mockedAddToast).toHaveBeenCalledWith(expect.objectContaining({
-        type: 'error',
-      }));
+      expect(mockedAddToast).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'error',
+        }),
+      );
     });
   });
 });
